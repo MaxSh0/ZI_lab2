@@ -4,40 +4,47 @@
 #include <windows.h> 
 #include <stdio.h>
 #include <wincrypt.h>
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <fstream>
+
 using namespace std;
 
-string convertToString(char* a, int size)
-{
-	int i;
-	string s = "";
-	for (i = 0; i < size; i++) {
-		s = s + a[i];
-	}
-	return s;
-}
+
+
 
 void main()
 {
+	setlocale(LC_ALL, "Russian");
 	HCRYPTPROV hProv;
 	HCRYPTKEY hSessionKey;
 
-	string line;
-	char string[] = "Test Hello World World Hello";
-	DWORD count = strlen(string);
-	ifstream f_in("test.txt");
-	while (getline(f_in,line))
-	{
+	string line = "Hello world";
+	char string[] = "Hello world"; //new char[line.length()];
+	/*for (int i = 0; i < line.length(); i++) {
+		string[i] = line[i];
+	}*/
 
+	cout << string << endl;
+
+	DWORD count = strlen(string);
+	
+
+	std::ifstream in("C:\\Users\\mshak_000\\Desktop\\ZI_lab2\\test2.txt"); // окрываем файл для чтения
+	if (in.is_open())
+	{
+		while (getline(in, line))
+		{
+			std::cout << line << std::endl;
+		}
 	}
+	in.close();     // закрываем файл
 
 
 	// Получение контекста криптопровайдера
 	if (!CryptAcquireContext(&hProv, NULL, NULL,PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 {
-		std::cout << "CryptAcquireContext";
+		std::cout << "Ошибка получения контекста криптопровайдера ";
 return;
 }
 
@@ -47,7 +54,7 @@ return;
 	if (!CryptGenKey(hProv, CALG_RC4, CRYPT_EXPORTABLE, &hSessionKey))
 {
 		
-		std::cout << "CryptGenKey";
+		std::cout << "Ошибка генерации ключа";
 return;
 }
 	
@@ -61,7 +68,7 @@ return;
 	// Шифрование данных
 	if (!CryptEncrypt(hSessionKey, 0, true, 0, (BYTE*)string, &count, strlen(string)))
 {
-//Error("CryptEncrypt");
+	std::cout << "Ошибка шифрования";
 return;
 }
 	std::cout << "Session Key: " << hSessionKey << std::endl;
@@ -70,18 +77,29 @@ return;
 
 	// Тестовый вывод на экран
 	std::cout << "Encrypted string: " << string << std::endl;
-	convertToString(string, strlen(string));
+
+
+
+
+	std::ofstream out;          // поток для записи
+	out.open("C:\\Users\\mshak_000\\Desktop\\ZI_lab2\\test2.txt"); // окрываем файл для записи
+	if (out.is_open())
+	{
+		out << string << std::endl;
+	}
+
+
+
+
+
+
+	if (!CryptDecrypt(hSessionKey, 0, true, 0, (BYTE*)string, &count))
+	{
+	std::cout << "Ошибка расшифровки";
+	}
+	std::cout << "Decrypted string: " << string << std::endl;
+
+
 }
 
 
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
