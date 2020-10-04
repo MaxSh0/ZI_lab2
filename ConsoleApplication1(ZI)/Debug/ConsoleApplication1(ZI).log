@@ -1,0 +1,3 @@
+﻿  ConsoleApplication1(ZI).cpp
+c:\users\mshak\source\repos\consoleapplication1(zi)\consoleapplication1(zi)\consoleapplication1(zi).cpp(23): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+  ConsoleApplication1(ZI).vcxproj -> C:\Users\mshak\source\repos\ConsoleApplication1(ZI)\Debug\ConsoleApplication1(ZI).exe
